@@ -3,7 +3,7 @@ package main
 import (
     "fmt"
     "net/http"
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
     "database/sql"
     //"os"
 )
@@ -32,10 +32,10 @@ func dbTable(w http.ResponseWriter, r *http.Request){
 		var email string
 		err = rows.Scan(&first_name, &last_name, &department, &email)
 		checkErr(err)
-		fmt.Fprintf(first_name)
-		fmt.Fprintf(last_name)
-		fmt.Fprintf(department)
-		fmt.Fprintf(email)
+		fmt.Fprintf(w, first_name)
+		fmt.Fprintf(w, last_name)
+		fmt.Fprintf(w, department)
+		fmt.Fprintf(w, email)
 	}
 	
 	db.Close()
@@ -44,7 +44,7 @@ func dbTable(w http.ResponseWriter, r *http.Request){
 
 func main() {
     //http.HandleFunc("/", helloWorld)
-	http.HandleFunc("/", dbTable)
+    http.HandleFunc("/", dbTable)
     http.ListenAndServe(":8080", nil)
 }
 
