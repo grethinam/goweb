@@ -32,7 +32,7 @@ func dbTable(w http.ResponseWriter, r *http.Request){
 		var email string
 		err = rows.Scan(&first_name, &last_name, &department, &email)
 		checkErr(err)
-		fmt.Fprintf(w,"|%6s|%6s|%6s|%6s|" ,first_name ,last_name ,department ,email)
+		fmt.Fprintf(w,"|%6s|%6s|%6s|%6s|\n" ,first_name ,last_name ,department ,email)
 		/*fmt.Fprintf(w, last_name)
 		fmt.Fprintf(w, department)
 		fmt.Fprintf(w, email)*/
