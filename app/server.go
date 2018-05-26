@@ -20,7 +20,7 @@ import (
 }*/
 
 func dbTable(w http.ResponseWriter, r *http.Request){
-    db, err := sql.Open("mysql", "root:supersecret@tcp(35.192.3.225:3306)/company?charset=utf8")
+    db, err := sql.Open("mysql", "root:supersecret@tcp(mysql:3306)/company?charset=utf8")
 	checkErr(err)
 	rows, err := db.Query("select * from employees")
 	checkErr(err)
