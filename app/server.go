@@ -6,7 +6,32 @@ import (
     _ "github.com/go-sql-driver/mysql"
     "database/sql"
     "os"
+    "html/template"
 )
+
+type Todo struct {
+	Title string
+	Done  bool
+}
+
+type TodoPageData struct {
+	PageTitle string
+	Todos     []Todo
+}
+
+func layout(w http.ResponseWriter, r *http.Request) {
+
+		tmpl := template.Must(template.ParseFiles("layout.html"))
+		data := TodoPageData{
+			PageTitle: "My TODO list",
+			Todos: []Todo{
+				{Title: "Task 1", Done: false},
+				{Title: "Task 2", Done: true},
+				{Title: "Task 3", Done: true},
+			},
+		}
+		tmpl.Execute(w, data)
+}
 
 func helloWorld(w http.ResponseWriter, r *http.Request){
     name, err := os.Hostname()
@@ -42,6 +67,7 @@ func dbTable(w http.ResponseWriter, r *http.Request){
 func main() {
     http.HandleFunc("/view", helloWorld)
     http.HandleFunc("/", dbTable)
+    http.HandleFunc("/html", layout) 
     http.ListenAndServe(":8080", nil)
 }
 
