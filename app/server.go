@@ -68,10 +68,29 @@ func dbTableHtml(w http.ResponseWriter, r *http.Request){
 	defer db.Close()
 }
 
+func dbTable(w http.ResponseWriter, r *http.Request){
+    db := dbConnect()
+	rows, err := db.Query("select * from employees")
+	checkErr(err)
+	
+	for rows.Next() {
+		var first_name string
+		var last_name string
+		var department string
+		var email string
+		err = rows.Scan(&first_name, &last_name, &department, &email)
+		checkErr(err)
+		fmt.Fprintf(w,"|%12s|%12s|%12s|%20s|\n" ,first_name ,last_name ,department ,email)
+	}
+	
+	db.Close()
+
+}
 
 func main() {
     http.HandleFunc("/", helloWorld)
     http.HandleFunc("/view", dbTableHtml) 
+	http.HandleFunc("/raw", dbTable)
     http.ListenAndServe(":8080", nil)
 }
 
