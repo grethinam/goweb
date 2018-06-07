@@ -39,7 +39,8 @@ func dbConnect() (db *sql.DB) {
     return db
 }
 
-var tmpl = template.Must(template.ParseFiles("layout.html"))
+//var tmpl = template.Must(template.ParseFiles("layout.html"))
+var tmpl = template.Must(template.ParseGlob("layout.html"))
 
 func dbTableHtml(w http.ResponseWriter, r *http.Request){
 	db := dbConnect()
@@ -65,12 +66,12 @@ func dbTableHtml(w http.ResponseWriter, r *http.Request){
 		
 	}
 	
-	for i := range(res) {
+	/*for i := range(res) {
         emp := res[i]
         fmt.Fprintf(w,"HA|%12s|%12s|%12s|%20s|\n" ,emp.fName ,emp.sName ,emp.dptName ,emp.eMail)
-    }
+    }*/
 	
-	//tmpl.ExecuteTemplate(w, "Index", res)
+	tmpl.ExecuteTemplate(w, "Index", res)
 	defer db.Close()
 }
 
