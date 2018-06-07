@@ -9,28 +9,11 @@ import (
     "html/template"
 )
 
-type Todo struct {
-	Title string
-	Done  bool
-}
-
-type TodoPageData struct {
-	PageTitle string
-	Todos     []Todo
-}
-
-func layout(w http.ResponseWriter, r *http.Request) {
-
-		tmpl := template.Must(template.ParseFiles("layout.html"))
-		data := TodoPageData{
-			PageTitle: "My TODO list",
-			Todos: []Todo{
-				{Title: "Task 1", Done: false},
-				{Title: "Task 2", Done: true},
-				{Title: "Task 3", Done: true},
-			},
-		}
-		tmpl.Execute(w, data)
+type Employee struct {
+    fName  string
+    sName  string
+    dptName   string
+    eMail string
 }
 
 func helloWorld(w http.ResponseWriter, r *http.Request){
@@ -40,15 +23,31 @@ func helloWorld(w http.ResponseWriter, r *http.Request){
         panic(err)
     }
     
-    fmt.Fprintf(w, "Hello World!!!!")
+    fmt.Fprintf(w, "Hello World!!!!\n")
     fmt.Fprintf(w, name)
 }
 
-func dbTable(w http.ResponseWriter, r *http.Request){
-    db, err := sql.Open("mysql", "root:supersecret@tcp(mysql.go:3306)/company?charset=utf8")
-	checkErr(err)
+func dbConnect(db *sql.DB) {
+    dbDriver := "mysql"
+    dbUser := "root"
+    dbPass := "supersecret"
+    dbHost := "mysql.go"
+    dbPort := "3306"
+    dbName := "company"
+    db, err := sql.Open(dbDriver, dbUser +":"+ dbPass +"@tcp("+ dbHost +":"+ dbPort +")/"+ dbName +"?charset=utf8")
+    checkErr(err)
+    return db
+}
+
+tmpl := template.Must(template.ParseFiles("form/*"))
+
+func dbTableHtml(w http.ResponseWriter, r *http.Request){
+	db := dbConn()
 	rows, err := db.Query("select * from employees")
 	checkErr(err)
+	
+	emp := Employee{}
+    res := []Employee{}
 	
 	for rows.Next() {
 		var first_name string
@@ -57,17 +56,22 @@ func dbTable(w http.ResponseWriter, r *http.Request){
 		var email string
 		err = rows.Scan(&first_name, &last_name, &department, &email)
 		checkErr(err)
-		fmt.Fprintf(w,"|%12s|%12s|%12s|%20s|\n" ,first_name ,last_name ,department ,email)
+		//fmt.Fprintf(w,"|%12s|%12s|%12s|%20s|\n" ,first_name ,last_name ,department ,email)
+		emp.fName = first_name
+		emp.sName = last_name
+		emp.dptName = department
+		emp.eMail = email
+		res = append(res, emp)
+		
 	}
-	
-	db.Close()
-
+	tmpl.ExecuteTemplate(w, "Index", res)
+	defer db.Close()
 }
 
+
 func main() {
-    http.HandleFunc("/view", helloWorld)
-    http.HandleFunc("/", dbTable)
-    http.HandleFunc("/html", layout) 
+    http.HandleFunc("/", helloWorld)
+    http.HandleFunc("/view", dbTableHtml) 
     http.ListenAndServe(":8080", nil)
 }
 
