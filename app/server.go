@@ -39,7 +39,7 @@ func dbConnect(db *sql.DB) {
     return db
 }
 
-var tmpl := template.Must(template.ParseFiles("form/*"))
+var tmpl = template.Must(template.ParseFiles("form/*"))
 
 func dbTableHtml(w http.ResponseWriter, r *http.Request){
 	db := dbConn()
