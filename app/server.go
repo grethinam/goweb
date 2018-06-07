@@ -13,7 +13,7 @@ type Employee struct {
     fName  string
     sName  string
     dptName   string
-    eMail string
+	eMail string
 }
 
 func helloWorld(w http.ResponseWriter, r *http.Request){
@@ -27,22 +27,22 @@ func helloWorld(w http.ResponseWriter, r *http.Request){
     fmt.Fprintf(w, name)
 }
 
-func dbConnect(db *sql.DB) {
+func dbConnect() (db *sql.DB) {
     dbDriver := "mysql"
     dbUser := "root"
     dbPass := "supersecret"
     dbHost := "mysql.go"
-    dbPort := "3306"
-    dbName := "company"
+	dbPort := "3306"
+	dbName := "company"
     db, err := sql.Open(dbDriver, dbUser +":"+ dbPass +"@tcp("+ dbHost +":"+ dbPort +")/"+ dbName +"?charset=utf8")
-    checkErr(err)
+	checkErr(err)
     return db
 }
 
 var tmpl = template.Must(template.ParseFiles("form/*"))
 
 func dbTableHtml(w http.ResponseWriter, r *http.Request){
-	db := dbConn()
+	db := dbConnect()
 	rows, err := db.Query("select * from employees")
 	checkErr(err)
 	
