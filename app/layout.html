@@ -6,7 +6,7 @@
         <meta charset="UTF-8" />
     </head>
     <body>
-        <h1>1234Maithanam website for mysql</h1> 
+        <h1>123Maithanam website for mysql</h1> 
 		
 	<table border="1">
       <tr>
@@ -19,12 +19,12 @@
       </tr>
 	  {{range $y, $x := . }}
       <tr>
-		<td>{{ $x.fName }}</td>
-		<td>{{ $x.sName }}</td>
-		<td>{{ $x.dptName }}</td>
-		<td>{{ $x.eMail }}</td>
-		<td><a href="/edit?id={{ $x.fName }}">Edit</a></td>
-		<td><a href="/delete?id={{ $x.fName }}">Delete</a><td>
+		<td>{{ $y.fName }}</td>
+		<td>{{ $y.sName }}</td>
+		<td>{{ $y.dptName }}</td>
+		<td>{{ $y.eMail }}</td>
+		<td><a href="/edit?id={{ $y.fName }}">Edit</a></td>
+		<td><a href="/delete?id={{ $y.fName }}">Delete</a><td>
       </tr>
     {{ end }}
     </table>
