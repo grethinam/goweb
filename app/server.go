@@ -57,43 +57,15 @@ func dbSelect() []Employee{
 var tmpl = template.Must(template.ParseFiles("layout.html"))
 //var tmpl = template.Must(template.ParseGlob("layout.html"))
 func dbTableHtml(w http.ResponseWriter, r *http.Request){
-	db := dbConnect()
-	rows, err := db.Query("select * from employees")
-	checkErr(err)
-	
-	emp := Employee{}
-    employees := []Employee{}
-	
-	for rows.Next() {
-		var first_name string
-		var last_name string
-		var department string
-		var email string
-		err = rows.Scan(&first_name, &last_name, &department, &email)
-		checkErr(err)
-		//fmt.Fprintf(w,"|%12s|%12s|%12s|%20s|\n" ,first_name ,last_name ,department ,email)
-		emp.fname = first_name
-		emp.sname = last_name
-		emp.dname = department
-		emp.email = email
-		employees = append(employees, emp)
-		
-	}
-	
-	/*for i := range(res) {
-        emp := res[i]
-        fmt.Fprintf(w,"HA|%12s|%12s|%12s|%20s|\n" ,emp.fName ,emp.sName ,emp.dptName ,emp.eMail)
-    }*/
-	
-	tmpl.ExecuteTemplate(w, "Index", employees)
-	defer db.Close()
+	table := dbSelect()
+	tmpl.ExecuteTemplate(w, "Index", table)
 }
 
 func dbTable(w http.ResponseWriter, r *http.Request){
     table := dbSelect()
 	for i := range(table) {
         emp := table[i]
-        fmt.Fprintf(w,"YES|%12s|%12s|%12s|%20s|\n" ,emp.fname ,emp.sname ,emp.dname ,emp.email)
+        fmt.Fprintf(w,"YESS|%12s|%12s|%12s|%20s|\n" ,emp.fname ,emp.sname ,emp.dname ,emp.email)
     }
 }
 
