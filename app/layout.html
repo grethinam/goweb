@@ -8,20 +8,6 @@
     <body>
         <h1>cMaithanam website for mysql</h1> 
 		
-	{{ $length := len . }}
-    <h3>Length {{$length}}</h3> 
-
-	<table border="1">
-      <tr>
-        <td>FirstName</td>
-      </tr>
-    {{ range . }}
-      <tr>
-        <td><h1>kMaithanam website for mysql</h1></td>
-      </tr>
-    {{ end }}
-    </table>
-	
 	<table border="1">
       <tr>
         <td>FirstName</td>
@@ -31,14 +17,14 @@
 		<td>Edit</td>
 		<td>Delete</td>
       </tr>
-    {{ range . }}
+	  {{range $y, $x := . }}
       <tr>
-        <td>{{ .fName }}</td>
-        <td> {{ .sName }} </td>
-        <td>{{ .dptName }} </td>
-		<td>{{ .eMail }} </td>
-        <td><a href="/edit?id={{ .fName }}">Edit</a></td>
-        <td><a href="/delete?id={{ .fName }}">Delete</a><td>
+		<td>{{ $x.fName }}</td>
+		<td>{{ $x.sName }}</td>
+		<td>{{ $x.dptName }}</td>
+		<td>{{ $x.eMail }}</td>
+		<td><a href="/edit?id={{ .fName }}">Edit</a></td>
+		<td><a href="/delete?id={{ .fName }}">Delete</a><td>
       </tr>
     {{ end }}
     </table>
