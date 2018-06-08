@@ -10,21 +10,13 @@ import (
 )
 
 type Employee struct {
-    fName  string
-    sName  string
-    dptName   string
-	eMail string
+    fname, sname, dname, email string
 }
 
 func helloWorld(w http.ResponseWriter, r *http.Request){
     name, err := os.Hostname()
-
-    if err != nil {
-        panic(err)
-    }
-    
-    fmt.Fprintf(w, "Hello World!!!!\n")
-    fmt.Fprintf(w, name)
+	checkErr(err)
+    fmt.Fprintf(w, "HOSTNAME : %s\n", name)
 }
 
 func dbConnect() (db *sql.DB) {
@@ -39,16 +31,38 @@ func dbConnect() (db *sql.DB) {
     return db
 }
 
+func dbSelect() []Employee{
+	db := dbConnect()
+	rows, err := db.Query("select * from employees")
+	checkErr(err)
+	
+	employee := Employee{}
+    employees := []Employee{}
+	
+	for rows.Next() {
+		var first_name, last_name, department, email string
+		err = rows.Scan(&first_name, &last_name, &department, &email)
+		checkErr(err)
+		employee.fname = first_name
+		employee.sname = last_name
+		employee.dname = department
+		employee.email = email
+		employees = append(employees, employee)
+		
+	}
+	defer db.Close()
+	return employees
+}
+
 var tmpl = template.Must(template.ParseFiles("layout.html"))
 //var tmpl = template.Must(template.ParseGlob("layout.html"))
-
 func dbTableHtml(w http.ResponseWriter, r *http.Request){
 	db := dbConnect()
 	rows, err := db.Query("select * from employees")
 	checkErr(err)
 	
 	emp := Employee{}
-    res := []Employee{}
+    employees := []Employee{}
 	
 	for rows.Next() {
 		var first_name string
@@ -58,11 +72,11 @@ func dbTableHtml(w http.ResponseWriter, r *http.Request){
 		err = rows.Scan(&first_name, &last_name, &department, &email)
 		checkErr(err)
 		//fmt.Fprintf(w,"|%12s|%12s|%12s|%20s|\n" ,first_name ,last_name ,department ,email)
-		emp.fName = first_name
-		emp.sName = last_name
-		emp.dptName = department
-		emp.eMail = email
-		res = append(res, emp)
+		emp.fname = first_name
+		emp.sname = last_name
+		emp.dname = department
+		emp.email = email
+		employees = append(employees, emp)
 		
 	}
 	
@@ -71,27 +85,16 @@ func dbTableHtml(w http.ResponseWriter, r *http.Request){
         fmt.Fprintf(w,"HA|%12s|%12s|%12s|%20s|\n" ,emp.fName ,emp.sName ,emp.dptName ,emp.eMail)
     }*/
 	
-	tmpl.ExecuteTemplate(w, "Index", res)
+	tmpl.ExecuteTemplate(w, "Index", employees)
 	defer db.Close()
 }
 
 func dbTable(w http.ResponseWriter, r *http.Request){
-    db := dbConnect()
-	rows, err := db.Query("select * from employees")
-	checkErr(err)
-	
-	for rows.Next() {
-		var first_name string
-		var last_name string
-		var department string
-		var email string
-		err = rows.Scan(&first_name, &last_name, &department, &email)
-		checkErr(err)
-		fmt.Fprintf(w,"|%12s|%12s|%12s|%20s|\n" ,first_name ,last_name ,department ,email)
-	}
-	
-	db.Close()
-
+    table := dbSelect()
+	for i := range(table) {
+        emp := table[i]
+        fmt.Fprintf(w,"YES|%12s|%12s|%12s|%20s|\n" ,emp.fname ,emp.sname ,emp.dname ,emp.email)
+    }
 }
 
 func main() {
