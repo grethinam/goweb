@@ -6,25 +6,35 @@
         <meta charset="UTF-8" />
     </head>
     <body>
-        <h1>123Maithanam website for mysql</h1> 
+        <h1>cMaithanam website for mysql</h1> 
 		
+	{{ $length := len . }}
+    <h3>Length {{$length}}</h3> 
+
+	<table border="1">
+      <tr>
+        <td>FirstName</td>
+      </tr>
+    {{ range . }}
+      <tr>
+        <td><h3>mysql</h3></td>
+      </tr>
+    {{ end }}
+    </table>
+	
 	<table border="1">
       <tr>
         <td>FirstName</td>
         <td>SecondName</td>
         <td>Department</td>
         <td>Email</td>
-		<td>Edit</td>
-		<td>Delete</td>
       </tr>
-	  {{range $y := . }}
+    {{ range . }}
       <tr>
-		<td>{{ $y.fName }}</td>
-		<td>{{ $y.sName }}</td>
-		<td>{{ $y.dptName }}</td>
-		<td>{{ $y.eMail }}</td>
-		<td><a href="/edit?id={{ $y.fName }}">Edit</a></td>
-		<td><a href="/delete?id={{ $y.fName }}">Delete</a><td>
+        <td>{{ .fname }}</td>
+        <td> {{ .sname }} </td>
+        <td>{{ .dname }} </td>
+	<td>{{ .email }} </td>
       </tr>
     {{ end }}
     </table>
