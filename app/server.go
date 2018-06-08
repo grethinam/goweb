@@ -65,7 +65,7 @@ func dbTable(w http.ResponseWriter, r *http.Request){
     table := dbSelect()
 	for i := range(table) {
         emp := table[i]
-        fmt.Fprintf(w,"YESS|%12s|%12s|%12s|%20s|\n" ,emp.fname ,emp.sname ,emp.dname ,emp.email)
+        fmt.Fprintf(w,"YESSS|%12s|%12s|%12s|%20s|\n" ,emp.fname ,emp.sname ,emp.dname ,emp.email)
     }
 }
 

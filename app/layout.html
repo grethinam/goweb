@@ -6,21 +6,10 @@
         <meta charset="UTF-8" />
     </head>
     <body>
-        <h1>cMaithanam website for mysql</h1> 
+        <h1>Maithanammm website for mysql</h1> 
 		
 	{{ $length := len . }}
     <h3>Length {{$length}}</h3> 
-
-	<table border="1">
-      <tr>
-        <td>FirstName</td>
-      </tr>
-    {{ range . }}
-      <tr>
-        <td><h3>mysql</h3></td>
-      </tr>
-    {{ end }}
-    </table>
 	
 	<table border="1">
       <tr>
@@ -34,7 +23,7 @@
         <td>{{ .fname }}</td>
         <td> {{ .sname }} </td>
         <td>{{ .dname }} </td>
-	<td>{{ .email }} </td>
+		<td>{{ .email }} </td>
       </tr>
     {{ end }}
     </table>
