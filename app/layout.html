@@ -6,7 +6,7 @@
         <meta charset="UTF-8" />
     </head>
     <body>
-        <h1>cMaithanam website for mysql</h1> 
+        <h1>1234Maithanam website for mysql</h1> 
 		
 	<table border="1">
       <tr>
@@ -23,8 +23,8 @@
 		<td>{{ $x.sName }}</td>
 		<td>{{ $x.dptName }}</td>
 		<td>{{ $x.eMail }}</td>
-		<td><a href="/edit?id={{ .fName }}">Edit</a></td>
-		<td><a href="/delete?id={{ .fName }}">Delete</a><td>
+		<td><a href="/edit?id={{ $x.fName }}">Edit</a></td>
+		<td><a href="/delete?id={{ $x.fName }}">Delete</a><td>
       </tr>
     {{ end }}
     </table>
