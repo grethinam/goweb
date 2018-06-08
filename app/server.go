@@ -39,8 +39,8 @@ func dbConnect() (db *sql.DB) {
     return db
 }
 
-//var tmpl = template.Must(template.ParseFiles("layout.html"))
-var tmpl = template.Must(template.ParseGlob("layout.html"))
+var tmpl = template.Must(template.ParseFiles("layout.html"))
+//var tmpl = template.Must(template.ParseGlob("layout.html"))
 
 func dbTableHtml(w http.ResponseWriter, r *http.Request){
 	db := dbConnect()
