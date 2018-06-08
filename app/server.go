@@ -71,7 +71,7 @@ func dbTableHtml(w http.ResponseWriter, r *http.Request){
         fmt.Fprintf(w,"HA|%12s|%12s|%12s|%20s|\n" ,emp.fName ,emp.sName ,emp.dptName ,emp.eMail)
     }*/
 	
-	tmpl.ExecuteTemplate(w, "Index", res)
+	tmpl.ExecuteTemplate(w, res)
 	defer db.Close()
 }
 
