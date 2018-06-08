@@ -6,12 +6,11 @@
         <meta charset="UTF-8" />
     </head>
     <body>
-        <h1>kMaithanam website for mysql</h1> 
+        <h1>cMaithanam website for mysql</h1> 
 		
 	{{ $length := len . }}
     <h3>Length {{$length}}</h3> 
      <table border="1">
-      <thead>
       <tr>
         <td>FirstName</td>
         <td>SecondName</td>
@@ -20,8 +19,6 @@
 		<td>Edit</td>
 		<td>Delete</td>
       </tr>
-       </thead>
-       <tbody>
     {{ range . }}
       <tr>
         <td>{{ .fName }}</td>
@@ -32,7 +29,6 @@
         <td><a href="/delete?id={{ .fName }}">Delete</a><td>
       </tr>
     {{ end }}
-       </tbody>
     </table>
     </body>
 </html>
