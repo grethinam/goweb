@@ -10,7 +10,7 @@ import (
 )
 
 type Employee struct {
-    fname, sname, dname, email string
+    Fname, Sname, Dname, Email string
 }
 
 func helloWorld(w http.ResponseWriter, r *http.Request){
@@ -43,10 +43,10 @@ func dbSelect() []Employee{
 		var first_name, last_name, department, email string
 		err = rows.Scan(&first_name, &last_name, &department, &email)
 		checkErr(err)
-		employee.fname = first_name
-		employee.sname = last_name
-		employee.dname = department
-		employee.email = email
+		employee.Fname = first_name
+		employee.Sname = last_name
+		employee.Dname = department
+		employee.Email = email
 		employees = append(employees, employee)
 		
 	}
@@ -54,19 +54,20 @@ func dbSelect() []Employee{
 	return employees
 }
 
-//var tmpl = template.Must(template.ParseFiles("layout.html"))
+var tmpl = template.Must(template.ParseFiles("layout.html"))
 //var tmpl = template.Must(template.ParseGlob("layout.html"))
 func dbTableHtml(w http.ResponseWriter, r *http.Request){
-	var tmpl = template.Must(template.ParseFiles("layout.html"))
+	//var tmpl = template.Must(template.ParseFiles("layout.html"))
 	table := dbSelect()
-	tmpl.ExecuteTemplate(w, "Index", table)
+	err := tmpl.ExecuteTemplate(w, "Index", table)
+	checkErr(err)
 }
 
 func dbTable(w http.ResponseWriter, r *http.Request){
     table := dbSelect()
 	for i := range(table) {
         emp := table[i]
-        fmt.Fprintf(w,"YESS|%12s|%12s|%12s|%20s|\n" ,emp.fname ,emp.sname ,emp.dname ,emp.email)
+        fmt.Fprintf(w,"YYEESS|%12s|%12s|%12s|%20s|\n" ,emp.Fname ,emp.Sname ,emp.Dname ,emp.Email)
     }
 }
 

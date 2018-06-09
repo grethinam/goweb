@@ -20,10 +20,10 @@
       </tr>
     {{ range . }}
       <tr>
-        <td>{{ $.fname }}</td>
-        <td> {{ $.sname }} </td>
-        <td>{{ $.dname }} </td>
-		<td>{{ $.email }} </td>
+        <td>{{ .Fname }}</td>
+        <td> {{ .Sname }} </td>
+        <td>{{ .Dname }} </td>
+		<td>{{ .Email }} </td>
       </tr>
     {{ end }}
     </table>
