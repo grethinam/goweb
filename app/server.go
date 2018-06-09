@@ -7,6 +7,7 @@ import (
     "database/sql"
     "os"
     "html/template"
+	"log"
 )
 
 type Employee struct {
@@ -73,10 +74,84 @@ func dbTable(w http.ResponseWriter, r *http.Request){
     }
 }
 
+func Delete(w http.ResponseWriter, r *http.Request) {
+    db := dbConnect()
+    emp := r.URL.Query().Get("id")
+    delForm, err := db.Prepare("DELETE FROM employees WHERE id=?")
+	checkErr(err)
+    delForm.Exec(emp)
+    log.Println("DELETE")
+    defer db.Close()
+    http.Redirect(w, r, "/view", 301)
+}
+
+func New(w http.ResponseWriter, r *http.Request) {
+    tmpl.ExecuteTemplate(w, "New", nil)
+}
+
+func Insert(w http.ResponseWriter, r *http.Request) {
+    db := dbConnect()
+    if r.Method == "POST" {
+        fname := r.FormValue("fname")
+		sname := r.FormValue("sname")
+		dname := r.FormValue("dname")
+        email := r.FormValue("email")
+        insForm, err := db.Prepare("INSERT INTO Employee(first_name, last_name, department, email) VALUES(?,?,?,?)")
+	    checkErr(err)
+        insForm.Exec(fname, sname, dname, email)
+        log.Println("INSERT: First Name: " + fname + " | LAST_NAME: " + sname+ " | DEPARTMENT: " + dname+ " | EMAIL: " + email)
+    }
+    defer db.Close()
+    http.Redirect(w, r, "/view", 301)
+}
+
+func Edit(w http.ResponseWriter, r *http.Request) {
+    db := dbConnect()
+    nId := r.URL.Query().Get("id")
+    selDB, err := db.Query("SELECT * FROM Employee WHERE id=?", nId)
+	checkErr(err)
+	employee := Employee{}
+    for selDB.Next() {
+		var first_name, last_name, department, email string
+		var id int
+		err = selDB.Scan(&id, &first_name, &last_name, &department, &email)
+		checkErr(err)
+		employee.Id = id
+		employee.Fname = first_name
+		employee.Sname = last_name
+		employee.Dname = department
+		employee.Email = email
+    }
+    tmpl.ExecuteTemplate(w, "Edit", employee)
+    defer db.Close()
+}
+
+func Update(w http.ResponseWriter, r *http.Request) {
+    db := dbConnect()
+    if r.Method == "POST" {
+        fname := r.FormValue("fname")
+		sname := r.FormValue("sname")
+		dname := r.FormValue("dname")
+        email := r.FormValue("email")
+        id := r.FormValue("uid")
+        updForm, err := db.Prepare("UPDATE employees SET first_name=?, last_name=?, department=?, email=? WHERE id=?")
+	    checkErr(err)
+        updForm.Exec(fname, sname, dname, email, id)
+        log.Println("UPDATE: First Name: " + fname + " | LAST_NAME: " + sname+ " | DEPARTMENT: " + dname+ " | EMAIL: " + email)
+    }
+    defer db.Close()
+    http.Redirect(w, r, "/view", 301)
+}
+
 func main() {
     http.HandleFunc("/", helloWorld)
     http.HandleFunc("/view", dbTableHtml) 
 	http.HandleFunc("/raw", dbTable)
+	http.HandleFunc("/new", New)
+	http.HandleFunc("/insert", Insert)
+	http.HandleFunc("/edit", Edit)
+	http.HandleFunc("/update", Update)
+	http.HandleFunc("/delete", Delete)
     http.ListenAndServe(":8080", nil)
 }
 
