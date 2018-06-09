@@ -96,7 +96,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 		sname := r.FormValue("sname")
 		dname := r.FormValue("dname")
         email := r.FormValue("email")
-        insForm, err := db.Prepare("INSERT INTO Employee(first_name, last_name, department, email) VALUES(?,?,?,?)")
+        insForm, err := db.Prepare("INSERT INTO employees(first_name, last_name, department, email) VALUES(?,?,?,?)")
 	    checkErr(err)
         insForm.Exec(fname, sname, dname, email)
         log.Println("INSERT: First Name: " + fname + " | LAST_NAME: " + sname+ " | DEPARTMENT: " + dname+ " | EMAIL: " + email)
@@ -108,7 +108,7 @@ func Insert(w http.ResponseWriter, r *http.Request) {
 func Edit(w http.ResponseWriter, r *http.Request) {
     db := dbConnect()
     nId := r.URL.Query().Get("id")
-    selDB, err := db.Query("SELECT * FROM Employee WHERE id=?", nId)
+    selDB, err := db.Query("SELECT * FROM employees WHERE id=?", nId)
 	checkErr(err)
 	employee := Employee{}
     for selDB.Next() {
