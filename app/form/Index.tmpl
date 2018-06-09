@@ -1,36 +1,25 @@
 {{ define "Index" }}
-<!DOCTYPE html>
-<html lang="en-US">
-    <head>
-        <title>Maithanam Website</title>
-        <meta charset="UTF-8" />
-    </head>
-    <body>
-        <h1>Maithanam website for mysql</h1> 
-     <table border="1">
-      <thead>
+ {{ template "Header" }}
+	
+	<table border="1">
       <tr>
         <td>FirstName</td>
         <td>SecondName</td>
         <td>Department</td>
         <td>Email</td>
-	<td>Edit</td>
-	<td>Delete</td>
+		<td>Edit</td>
+		<td>Delete</td>
       </tr>
-       </thead>
-       <tbody>
     {{ range . }}
       <tr>
-        <td>{{ .fName }}</td>
-        <td> {{ .sName }} </td>
-        <td>{{ .dptName }} </td>
-	<td>{{ .eMail }} </td>
-        <td><a href="/edit?id={{ .Id }}">Edit</a></td>
-        <td><a href="/delete?id={{ .Id }}">Delete</a><td>
+        <td>{{ .Fname }}</td>
+        <td> {{ .Sname }} </td>
+        <td>{{ .Dname }} </td>
+		<td>{{ .Email }} </td>
+		<td><a href="/edit?id={{ .Fname }}">Edit</a></td>
+        <td><a href="/delete?id={{ .Fname }}">Delete</a><td>
       </tr>
     {{ end }}
-       </tbody>
     </table>
-    </body>
-</html>
+  {{ template "Footer" }}
 {{ end }}
