@@ -8,6 +8,7 @@ import (
     "os"
     "html/template"
 	"log"
+	"strings"
 )
 
 type Employee struct {
@@ -144,9 +145,11 @@ func Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    http.HandleFunc("/", helloWorld)
-    http.HandleFunc("/view", dbTableHtml) 
+
+	checkTableExist()
+    http.HandleFunc("/", dbTableHtml)
 	http.HandleFunc("/raw", dbTable)
+	http.HandleFunc("/host", helloWorld)
 	http.HandleFunc("/new", New)
 	http.HandleFunc("/insert", Insert)
 	http.HandleFunc("/edit", Edit)
@@ -159,4 +162,42 @@ func checkErr(err error) {
     if err != nil {
         panic(err)
     }
+}
+
+func checkTableExist() {
+	
+	db := dbConnect()
+	defer db.Close()
+	// make sure connection is available
+	err := db.Ping()
+    checkErr(err)
+	
+	dbName := "company"
+	dbTable	:= "employees"
+	
+	infoTablestmt, err := db.Query("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '" + dbName + "' AND table_name = '" + dbTable + "' LIMIT 1;")
+	checkErr(err)
+	
+	var queryTable string
+	
+	for infoTablestmt.Next() {
+		var table string
+        err = infoTablestmt.Scan(&table)
+        checkErr(err)
+        queryTable = table
+    }
+	if strings.TrimSpace(queryTable) != dbTable {
+		log.Println("INFO: Employee Table creation started....")
+		createT, err := db.Prepare("CREATE TABLE employees ( id int(6) unsigned NOT NULL AUTO_INCREMENT, first_name varchar(25) NOT NULL, last_name  varchar(25) NOT NULL, department varchar(15) NOT NULL, email  varchar(50) NOT NULL, PRIMARY KEY (id))ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;")
+		
+		checkErr(err)
+		_, err = createT.Exec()
+		if err != nil {
+			panic(err)
+		} else {
+			log.Println("INFO: Employee Table successfully created....")
+		}
+	}else{
+		log.Println("INFO: Employee Table exist....")
+	}
 }
