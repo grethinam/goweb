@@ -26,7 +26,7 @@ func dbConnect() (db *sql.DB) {
     dbDriver := "mysql"
     dbUser := "root"
     dbPass := "supersecret"
-    dbHost := "mysql.go"
+    dbHost := "mysqldb"
 	dbPort := "3306"
 	dbName := "company"
     db, err := sql.Open(dbDriver, dbUser +":"+ dbPass +"@tcp("+ dbHost +":"+ dbPort +")/"+ dbName +"?charset=utf8")
